@@ -1,65 +1,133 @@
 <template>
-  <div id="app" class="container">
-    <h1 class="text-center">ToDo App</h1>
-    <input 
-      v-model="todoText"
-      type="text" 
-      class="w-100 p-2" 
-      placeholder="Type todo"
-      @keyup.enter="addTodo"
-    >
-    <hr>
-    <todo 
-      v-for="todo in todos" 
-      :key="todo.id"
-      :todo="todo"
+<div id="app">
+  <div class="container">
+    <!--ToDo App-->
+    <h1 class="text-center">Todo App</h1>
+
+    <!--ToDo List 입력-->
+    <AddTodo @add-todo="addTodo"/>
+
+    <!--전체선택 해제-->
+    <div class="mt-2">
+      <input type="checkbox" @change="selectAll" >
+      <span class="ml-3" style="font-weight: 700;">List</span>
+    </div>
+    <hr class="mt-1">
+
+    <!--ToDo 목록-->
+    <TodoList 
+      :todos="todos" 
       @toggle-checkbox="toggleCheckbox"
       @click-delete="deleteTodo"
     />
+    <hr>
+    <div class="d-flex">
+      <!--완료 목록 개수-->
+      <CompletedTodo :todos="todos" />
+
+      <!--선택 삭제-->
+      <button 
+        class="btn btn-secondary btn-sm text-center"
+        @click="deleteSelected"
+      >Delete Selected</button>
+
+      <!--전체 삭제-->
+      <button 
+        class="btn btn-secondary btn-sm text-center ml-1"
+        @click="deleteTodoAll"
+      >Clear All</button>
+    </div>
   </div>
+</div>
 </template>
 
 <script>
-import todo from '@/components/todo.vue'
+import TodoList from '@/components/TodoList';
+import AddTodo from '@/components/AddTodo';
+import CompletedTodo from '@/components/CompletedTodo';
+
 export default {
-  components:{
-    todo
+  components: {
+    TodoList,
+    AddTodo,
+    CompletedTodo,
   },
-  data(){
-    return{
-      todoText:'',
-      todos:[
-        {id:1, text:'buy a car', checked:false},
-        {id:2, text:'play game', checked:false},
+  data() {
+    return {
+      todoText: '',
+      checked: true,
+      todos: [
+        { id: 1, text: 'Exercise', checked: false},
+        { id: 2, text: 'Study', checked: false},
+        { id: 3, text: 'Shopping', checked: false},
       ]
     }
   },
-  methods:{
-    deleteTodo(id){
-      // const index = this.todos.findIndex(todo=>{
-      //   return todo.id === id;
-      // });
-      // this.todos.splice(index,1);
-      this.todos = this.todos.filter(todo => todo.id !== id);
+
+  methods: {
+    selectAll() {
+      console.log(this.checked);
+      console.log(this.todos);
+      for(var i = 0; i <  this.todos.length; i++){
+        this.todos[i].checked = this.checked;
+      }
+      this.checked = !this.checked;
     },
-    addTodo(e){
-      this.todos.push({
-        id:Math.random,
-        text:e.target.value,
-        checked:false,
+    deleteTodo(id) {
+      const index = this.todos.findIndex(todo => {
+        return todo.id === id;
       });
-      this.todoText='';
+      this.todos.splice(index, 1);
+      // this.todos = this.todos.filter(todo => todo.id !== id);
     },
-    toggleCheckbox({id,checked}){
-      const index = this.todos.findIndex(todo=>{
+    deleteSelected() {
+      for(var i = 0; i <  this.todos.length; i++){
+        if( this.todos[i].checked){
+          this.todos.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    deleteTodoAll() {
+      this.todos.splice(0, this.todos.length);
+    },
+    addTodo(value) {
+      // 빈문자입력 무시
+      if(value !=''){
+        if(this.todos.length >= 15){
+          alert('Too many ToDo lists..')
+        }
+        else{
+            this.todos.push({
+            id: Math.random(),
+            text: value,
+            checked: false
+          });
+        }
+      }
+      this.todoText = '';
+    },
+    toggleCheckbox({id, checked}) {
+      const index = this.todos.findIndex(todo => {
         return todo.id === id;
       });
       this.todos[index].checked = checked;
-    },
+    }
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+#app { 
+  width: 2000px;
+  height: 1200px;
+  background-image: url('../images/todo_background.jpg');
+  background-position: center center;
+  display: table-cell;
+  vertical-align: top;
+}
+.container{
+  margin: 40px auto 40px auto;
+  background-color: white;
+}
 </style>
