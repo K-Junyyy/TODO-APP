@@ -127,6 +127,7 @@ export default {
   vertical-align: top;
 }
 .container{
+  max-width: 700px;
   margin: 40px auto 40px auto;
   background-color: white;
 }
