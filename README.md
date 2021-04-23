@@ -1,6 +1,6 @@
 # ToDo App
 
-## [ToDo App result](https://k-junyyy.github.io/TODO-APP/)
+## [ToDo App Link](https://k-junyyy.github.io/TODO-APP/)
 
 ![2021 04 22](https://user-images.githubusercontent.com/74912530/115629401-43c13480-a33d-11eb-8c3e-497eead76a50.png)
 
